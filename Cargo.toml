@@ -1,0 +1,59 @@
+[package]
+name = "hopper"
+version = "1.0.0"
+edition = "2021"
+
+[features]
+default = ["reload"]
+embed = ["dep:minijinja-embed"]
+reload = ["dep:minijinja-autoreload", "minijinja/loader"]
+
+[build-dependencies]
+minijinja-embed = {version = "2.2"}
+
+[dependencies]
+anyhow = "1.0"
+async-trait = "0.1"
+axum-extra = { version = "0.9", features = ["cookie", "cookie-private", "form", "query"] }
+axum = { version = "0.7", features = ["http2", "macros"] }
+axum-template = { version = "2.4", features = ["minijinja-autoreload", "minijinja"] }
+base64 = "0.22"
+chrono-tz = { version = "0.10", features = ["serde"] }
+chrono = { version = "0.4", default-features = false, features = ["std", "alloc", "now", "serde"] }
+futures-util = { version = "0.3", features = ["sink"] }
+headers = "0.4"
+http = "1.1"
+serde_json = { version = "1.0", features = ["alloc"] }
+serde = { version = "1.0", features = ["alloc", "derive"] }
+thiserror = "1.0"
+tokio-util = { version = "0.7", features = ["net", "rt", "tracing"] }
+tokio = { version = "1.41", features = ["bytes", "macros", "net", "rt", "rt-multi-thread", "signal"] }
+tower-http = { version = "0.5", features = ["cors", "fs", "timeout", "trace", "tracing"] }
+tower = { version = "0.5", features = ["limit", "timeout", "tokio", "tracing", "util"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "chrono", "json"] }
+tracing = { version = "0.1", features = ["async-await", "log"] }
+reqwest = { version = "0.12", features = ["json", "zstd", "rustls-tls"] }
+minijinja = { version = "2.2", features = ["builtins", "json", "urlencode"] }
+minijinja-autoreload = { version = "2.2", optional = true }
+minijinja-embed = { version = "2.2", optional = true }
+axum-htmx = { version = "0.6", features = ["auto-vary"] }
+cityhasher = "0.1"
+rand = "0.8"
+async-stream = "0.3"
+tokio-stream = "0.1"
+moka = { version = "0.12", features = ["future"] }
+url = "2.5"
+ordermap = "0.5"
+cookie = "0.18"
+ics = "0.5"
+rust-embed = "8.5"
+urlencoding = "2.1"
+unic-langid = "0.9"
+intl-memoizer = "0.5"
+fluent = "0.16"
+fluent-bundle = "0.15"
+fluent-syntax = "0.11"
+
+[profile.release]
+lto = true
+strip = true

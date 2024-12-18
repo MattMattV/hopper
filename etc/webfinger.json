@@ -1,0 +1,12 @@
+{
+  "subject": "acct:smokesignal.events",
+  "links": [
+    {
+      "rel": "https://hopper.at/spec/schema/1.0/link",
+      "href": "https://smokesignal.events/{identity}/{rkey}",
+      "properties": {
+         "https://hopper.at/spec/schema/1.0/link#collection": "events.smokesignal.calendar.event"
+      }
+    }
+  ]
+}

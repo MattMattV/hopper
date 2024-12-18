@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+		<meta property="og:title" content="Hopper" />
+		<meta property="og:description" content="Jump with AT-URIs to your favorite websites and services." />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Hopper" />
+		<meta name="twitter:description" content="Jump with AT-URIs to your favorite websites and services." />
+    <meta property="og:site_name" content="Hopper" />
+    <meta property="og:type" content="website" />
+    <title>{%- block title %}{{ title }}{% endblock -%}</title>
+    <link rel="stylesheet" href="/pico.classless.blue.min.css" />
+    <link rel="stylesheet" href="/pico.colors.min.css" />
+    <link rel="canonical" href="https://hopper.at/" />
+    <script src="/htmx.js"></script>
+    <script src="/loading-states.js"></script>
+  </head>
+  <body hx-ext="loading-states">
+    {%- block content -%}{%- endblock -%}
+    {% include 'footer.en-us.html' %}
+  </body>
+</html>
