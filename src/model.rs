@@ -1,3 +1,4 @@
+#[derive(Debug, Clone)]
 pub(crate) struct AtUri {
     pub(crate) identity: String,
     pub(crate) collection: Option<String>,

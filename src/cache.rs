@@ -7,7 +7,7 @@ use std::{
 
 use crate::{
     model::AtUri,
-    webfinger::{query, Webfinger},
+    webhostmeta::{query, WebHostMeta},
 };
 
 struct ResolveWebfingerExpiry;
@@ -45,7 +45,7 @@ impl Expiry<String, ResolveAtUriResult> for ResolveAtUriExpiry {
 
 #[derive(Clone, PartialEq, Eq)]
 pub enum ResolveWebfingerResult {
-    Found(Webfinger),
+    Found(WebHostMeta),
     NotFound(String),
 }
 
@@ -75,7 +75,7 @@ pub(crate) async fn webfinger_cached(
     cache: &Cache<String, ResolveWebfingerResult>,
     http_client: &reqwest::Client,
     hostname: &str,
-) -> Result<Webfinger> {
+) -> Result<WebHostMeta> {
     if let Some(resolve_handle_result) = cache.get(hostname).await {
         return match resolve_handle_result {
             ResolveWebfingerResult::Found(webfinger) => Ok(webfinger),
@@ -127,6 +127,7 @@ pub(crate) async fn aturi_cached(
 
         let destination = webfinger.match_uri(server, aturi);
         if destination.is_none() {
+            tracing::debug!("no destination found");
             continue;
         }
 

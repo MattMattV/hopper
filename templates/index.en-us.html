@@ -1,5 +1,14 @@
 {% extends "base.en-us.html" %}
 {% block title %}Hopper{% endblock %}
+{% block header %}
+<meta property="og:title" content="Hopper" />
+<meta property="og:description" content="Jump with AT-URIs to your favorite websites and services." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Hopper" />
+<meta name="twitter:description" content="Jump with AT-URIs to your favorite websites and services." />
+<meta property="og:site_name" content="Hopper" />
+<meta property="og:type" content="website" />
+{% endblock %}
 {% block content %}
 <main>
   <hgroup>
@@ -22,45 +31,16 @@
         <kbd>aturi</kbd> - The URL encoded AT-URI to jump to.
       </li>
       <li>
-        <kbd>server</kbd> - (Optional) The hostname of an AT-URI provider that serves <code>/.well-known/webfinger</code> link templates.
+        <kbd>server</kbd> - (Optional) The hostname of an AT-URI provider that serves <code>/.well-known/host-meta.json</code> link templates.
       </li>
     </ul>
     <p>Example:
       <a target="_blank" href="https://hopper.at/?aturi=at%3A%2F%2Fdid%3Aplc%3Atgudj2fjm77pzkuawquqhsxm%2Fevents.smokesignal.calendar.event%2F3kxbvxj7blk2t">https://hopper.at/?aturi=at%3A%2F%2Fdid%3Aplc%3Atgudj2fjm77pzkuawquqh...vxj7blk2t</a>
     </p>
 
-    <h2>/.well-known/webfinger</h2>
-    <p>This application uses the <a href="https://en.wikipedia.org/wiki/WebFinger">WebFinger Spec</a> to expand AT-URIs.</p>
-    <p>For example: <a href="https://smokesignal.events/.well-known/webfinger">https://smokesignal.events/.well-known/webfinger</a></p>
-
-    <pre><code>{
-  "subject": "acct:smokesignal.events",
-  "links": [
-    {
-      "rel": "https://hopper.at/spec/schema/1.0/link",
-      "href": "https://smokesignal.events/{identity}/{rkey}",
-      "properties": {
-          "https://hopper.at/spec/schema/1.0/link#collection": "events.smokesignal.calendar.event"
-      }
-    }
-  ]
-}</code></pre>
-
     <h3>Spec</h3>
-    <p>Only links with the rel <code>https://hopper.at/spec/schema/1.0/link</code> are used.</p>
-    <p>The <code>properties</code> attribute must contain the <code>https://hopper.at/spec/schema/1.0/link#collection</code> key.</p>
-    <p></p>The value of that key is used to match the <code>collection</code> value of the AT-URI</p>
+    <p>More information and examples can be found at <a href="https://{{ base }}/spec">https://{{ base }}/spec</a></p>
 
-    <h3>Interpolation</h3>
-    <p>When an AT-URI is validated and parsed, it's 3 parts are used as references: <code>identity</code>, <code>collection</code>, and <code>rkey</code></p>
-    <p>Those three fields can be used in URL templates.</p>
-
-    <h1>Errata</h1>
-    <ul>
-      <li>The hostname that serves the <code>/.well-known/webfinger</code> file must be in the <code>subject</code> identifier.</li>
-      <li>If a server is referenced in a URL for the first time, the content is fetched and cached for a period of time.</li>
-      <li>Link URLs must have the same server that served the <code>/.well-known/webfinger</code>.</li>
-    </ul>
     <p>Why Hopper? See <a href="https://en.wikipedia.org/wiki/Hopper_balloon">https://en.wikipedia.org/wiki/Hopper_balloon</a></p>
   </section>
 </main>

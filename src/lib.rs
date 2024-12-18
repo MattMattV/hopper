@@ -4,4 +4,4 @@ pub(crate) mod errors;
 pub mod http;
 pub mod i18n;
 pub(crate) mod model;
-pub mod webfinger;
+pub mod webhostmeta;

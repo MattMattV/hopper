@@ -9,9 +9,7 @@ use axum_extra::extract::cookie::CookieJar;
 use std::str::FromStr;
 use unic_langid::LanguageIdentifier;
 
-use crate::i18n::errors::I18nError;
-
-use super::context::WebContext;
+use crate::{http::context::WebContext, i18n::errors::I18nError};
 
 pub(crate) const COOKIE_LANG: &str = "lang";
 

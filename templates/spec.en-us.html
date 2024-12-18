@@ -1,0 +1,80 @@
+{% extends "base.en-us.html" %}
+{% block title %}Hopper Spec{% endblock %}
+{% block header %}
+<meta property="og:title" content="Hopper Spec" />
+<meta property="og:description" content="The Hopper Spec and documentation" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Hopper Spec" />
+<meta name="twitter:description" content="The Hopper Spec and documentation" />
+<meta property="og:site_name" content="Hopper Spec" />
+<meta property="og:type" content="website" />
+{% endblock %}
+{% block content %}
+<main>
+  <hgroup>
+    <h1>Hopper Spec</h1>
+  </hgroup>
+  <section>
+    <p>The following link relationships and namespaces are used in the context of the <a href="https://datatracker.ietf.org/doc/html/rfc6415">Web Host Metadata Spec</a>.</p>
+    <hgroup>
+      <h3>http://hopper.at/rel/link</h3>
+      <p>A Hooper link relation type.</p>
+    </hgroup>
+
+    <p>This link relationship URI is used by Hopper to find <code>link</code> structures that include a template used to transform AT-URI structures.</p>
+    <p>See also: <a href="https://atproto.com/specs/at-uri-scheme">https://atproto.com/specs/at-uri-scheme</a></p>
+    
+    <hgroup>
+      <h3>http://hopper.at/ns/collection</h3>
+      <p>A Hooper link collection namespaced property.</p>
+    </hgroup>
+    <p>This namespace is used to match an AT-URI collection with a <code>link</code> structure.</p>
+
+    <h1>Templates</h1>
+    <p>This project uses the <strong>Restricted AT URI Syntax</strong>.</p>
+    <pre><code>AT-URI        = "at://" IDENTITY [ "/" COLLECTION [ "/" RKEY ] ]
+
+IDENTITY     = HANDLE | DID
+COLLECTION    = NSID
+RKEY          = RECORD-KEY</code></pre>
+
+    <p>URI templates can use the following variables:</p>
+    <ol>
+      <li><code>{identity}</code></li>
+      <li><code>{collection}</code></li>
+      <li><code>{rkey}</code></li>
+    </ol>
+
+    <p>This deviates from spec as typically only the <code>{uri}</code> variable is supported.</p>
+
+    <h1>Integration Notes</h1>
+    <p>When a Web Host Meta structure is parsed, the following rules are applied:</p>
+    <ol>
+      <li>Only links with the <code>rel</code> <code>http://hopper.at/rel/link</code> are used.</li>
+      <li>Only links with a <code>template</code> attribute are used.</li>
+      <li>The template must have the same hostname as the server.</li>
+      <li>The <code>properties</code> attribute must contain the <code>http://hopper.at/ns/collection</code> key.</li>
+    </ol>
+
+    <p>Optional, when serving the <code>/.well-known/host-meta.json</code> file, use the recommended <code>application/jrd+json</code> content type.</p>
+
+
+    <h1>Example /.well-known/host-meta.json</h1>
+    <pre><code>{
+  "links": [
+    {
+      "rel": "http://hopper.at/rel/link",
+      "template": "https://smokesignal.events/{identity}/{rkey}",
+      "properties": {
+          "http://hopper.at/ns/collection": "events.smokesignal.calendar.event"
+      }
+    }
+  ]
+}</code></pre>
+
+    <p>See also: <a
+      href="https://smokesignal.events/.well-known/host-meta.json">https://smokesignal.events/.well-known/host-meta.json</a>
+  </p>
+  <p>Back to <a href="https://hopper.at/">https://hopper.at/</a></p>
+</main>
+{% endblock %}

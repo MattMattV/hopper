@@ -4,17 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
-		<meta property="og:title" content="Hopper" />
-		<meta property="og:description" content="Jump with AT-URIs to your favorite websites and services." />
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="Hopper" />
-		<meta name="twitter:description" content="Jump with AT-URIs to your favorite websites and services." />
-    <meta property="og:site_name" content="Hopper" />
-    <meta property="og:type" content="website" />
     <title>{%- block title %}{{ title }}{% endblock -%}</title>
     <link rel="stylesheet" href="/pico.classless.blue.min.css" />
     <link rel="stylesheet" href="/pico.colors.min.css" />
-    <link rel="canonical" href="https://hopper.at/" />
+    {% block header %}{% endblock %}
+    {% if canonical_url %}
+    <link rel="canonical" href="{{ canonical_url }}" />
+    {% endif %}
     <script src="/htmx.js"></script>
     <script src="/loading-states.js"></script>
   </head>

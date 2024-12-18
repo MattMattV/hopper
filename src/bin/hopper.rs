@@ -6,7 +6,7 @@ use hopper::{
         server::build_router,
     },
     i18n::Locales,
-    webfinger::Webfinger,
+    webhostmeta::WebHostMeta,
 };
 use std::{env, str::FromStr, time::Duration};
 use tokio::net::TcpListener;
@@ -79,61 +79,23 @@ async fn main() -> Result<()> {
     resolve_webfinger_cache
         .insert(
             "bsky.app".to_string(),
-            ResolveWebfingerResult::Found(Webfinger {
-                subject: "acct:bsky.app".to_string(),
-                properties: std::collections::HashMap::new(),
-                links: vec![
-                    hopper::webfinger::Link {
-                        rel: "https://hopper.at/spec/schema/1.0/link".to_string(),
-                        href: "https://bsky.app/profile/{identity}".to_string(),
-                        properties: std::collections::HashMap::new(),
-                    },
-                    hopper::webfinger::Link {
-                        rel: "https://hopper.at/spec/schema/1.0/link".to_string(),
-                        href: "https://bsky.app/profile/{identity}/post/{rkey}".to_string(),
-                        properties: std::collections::HashMap::from([(
-                            "https://hopper.at/spec/schema/1.0/link#collection".to_string(),
-                            "app.bsky.feed.post".to_string(),
-                        )]),
-                    },
-                ],
-            }),
+            ResolveWebfingerResult::Found(WebHostMeta::new(vec![
+                hopper::webhostmeta::Link::new("https://bsky.app/profile/{identity}", None),
+                hopper::webhostmeta::Link::new(
+                    "https://bsky.app/profile/{identity}/post/{rkey}",
+                    Some("app.bsky.feed.post"),
+                ),
+            ])),
         )
         .await;
-
-    // resolve_webfinger_cache
-    //     .insert(
-    //         "smokesignal.events".to_string(),
-    //         ResolveWebfingerResult::Found(Webfinger {
-    //             subject: "acct:smokesignal.events".to_string(),
-    //             properties: std::collections::HashMap::new(),
-    //             links: vec![hopper::webfinger::Link {
-    //                 rel: "https://hopper.at/spec/schema/1.0/link".to_string(),
-    //                 href: "https://smokesignal.events/{identity}/{rkey}".to_string(),
-    //                 properties: std::collections::HashMap::from([(
-    //                     "https://hopper.at/spec/schema/1.0/link#collection".to_string(),
-    //                     "events.smokesignal.calendar.event".to_string(),
-    //                 )]),
-    //             }],
-    //         }),
-    //     )
-    //     .await;
 
     resolve_webfinger_cache
         .insert(
             "frontpage.fyi".to_string(),
-            ResolveWebfingerResult::Found(Webfinger {
-                subject: "acct:frontpage.fyi".to_string(),
-                properties: std::collections::HashMap::new(),
-                links: vec![hopper::webfinger::Link {
-                    rel: "https://hopper.at/spec/schema/1.0/link".to_string(),
-                    href: "https://frontpage.fyi/post/{identity}/{rkey}".to_string(),
-                    properties: std::collections::HashMap::from([(
-                        "https://hopper.at/spec/schema/1.0/link#collection".to_string(),
-                        "fyi.unravel.frontpage.post".to_string(),
-                    )]),
-                }],
-            }),
+            ResolveWebfingerResult::Found(WebHostMeta::new(vec![hopper::webhostmeta::Link::new(
+                "https://frontpage.fyi/post/{identity}/{rkey}",
+                Some("fyi.unravel.frontpage.post"),
+            )])),
         )
         .await;
 
