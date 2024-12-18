@@ -1,11 +1,12 @@
 use anyhow::Result;
 use async_trait::async_trait;
 use axum::{
-    extract::{FromRef, FromRequestParts},
+    extract::{FromRef, FromRequestParts, Query},
     http::request::Parts,
     response::Response,
 };
 use axum_extra::extract::cookie::CookieJar;
+use serde::Deserialize;
 use std::str::FromStr;
 use unic_langid::LanguageIdentifier;
 
@@ -75,6 +76,11 @@ impl FromStr for AcceptedLanguage {
 #[derive(Clone)]
 pub(crate) struct Language(pub(crate) LanguageIdentifier);
 
+#[derive(Deserialize, Debug)]
+pub(crate) struct LanguageQuery {
+    pub(crate) lang: Option<String>,
+}
+
 #[async_trait]
 impl<S> FromRequestParts<S> for Language
 where
@@ -94,6 +100,22 @@ where
                     for lang in &web_context.i18n_context.supported_languages {
                         if lang.matches(&value, true, false) {
                             return Ok(Self(lang.clone()));
+                        }
+                    }
+                }
+            }
+        }
+
+        if let Ok(Query(language_query)) =
+            Query::<LanguageQuery>::from_request_parts(parts, context).await
+        {
+            if let Some(language) = language_query.lang {
+                for value_part in language.split(',') {
+                    if let Ok(value) = value_part.parse::<LanguageIdentifier>() {
+                        for lang in &web_context.i18n_context.supported_languages {
+                            if lang.matches(&value, true, false) {
+                                return Ok(Self(lang.clone()));
+                            }
                         }
                     }
                 }
