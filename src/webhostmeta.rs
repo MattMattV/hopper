@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -28,9 +28,14 @@ pub struct WebHostMeta {
 pub(crate) async fn query(http_client: &reqwest::Client, hostname: &str) -> Result<WebHostMeta> {
     let url = format!("https://{}/.well-known/host-meta.json", hostname,);
 
-    let web_host_meta: WebHostMeta = http_client.get(url).send().await?.json().await?;
-
-    Ok(web_host_meta)
+    http_client
+        .get(url)
+        .send()
+        .await
+        .context("web host meta get failed")?
+        .json()
+        .await
+        .context("web host meta parse failed")
 }
 
 impl Link {
@@ -55,22 +60,19 @@ impl WebHostMeta {
     }
 
     pub(crate) fn match_uri(&self, server: &str, aturi: &AtUri) -> Option<String> {
-        tracing::debug!("matching uri: {:?}", aturi);
-        let prefix = format!("https://{}", server);
+        let prefix = format!("https://{}/", server);
         for link in &self.links {
             if link.rel != REL_LINK {
                 continue;
             }
 
             if link.template.is_none() {
-                tracing::debug!("template is empty");
                 continue;
             }
 
             let template = link.template.as_ref().unwrap();
 
             if !template.starts_with(prefix.as_str()) {
-                tracing::debug!("template does not match prefix {}", prefix);
                 continue;
             }
 

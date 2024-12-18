@@ -5,7 +5,7 @@ use std::{ops::Deref, sync::Arc};
 use unic_langid::LanguageIdentifier;
 
 use crate::{
-    cache::{ResolveAtUriResult, ResolveWebfingerResult},
+    cache::{ResolveAtUriResult, ResolveWebHostMetaResult},
     i18n::Locales,
 };
 
@@ -30,7 +30,7 @@ pub struct InnerWebContext {
     pub(crate) external_base: String,
     pub(crate) engine: AppEngine,
     pub(crate) http_client: reqwest::Client,
-    pub(crate) resolve_webfinger_cache: Cache<String, ResolveWebfingerResult>,
+    pub(crate) resolve_webfinger_cache: Cache<String, ResolveWebHostMetaResult>,
     pub(crate) resolve_aturi_cache: Cache<String, ResolveAtUriResult>,
     pub(crate) i18n_context: I18nContext,
 }
@@ -51,7 +51,7 @@ impl WebContext {
         external_base: &str,
         engine: AppEngine,
         http_client: &reqwest::Client,
-        resolve_webfinger_cache: Cache<String, ResolveWebfingerResult>,
+        resolve_webfinger_cache: Cache<String, ResolveWebHostMetaResult>,
         resolve_aturi_cache: Cache<String, ResolveAtUriResult>,
         i18n_context: I18nContext,
     ) -> Self {

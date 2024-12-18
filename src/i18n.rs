@@ -139,13 +139,13 @@ pub mod errors {
 
     #[derive(Debug, Error)]
     pub enum I18nError {
-        #[error("error-i18n-1 Invalid language")]
+        #[error("error-i18n-invalid-language Invalid language")]
         InvalidLanguage(),
 
-        #[error("error-i18n-2 Language resource failed")]
+        #[error("error-i18n-resource-failed Language resource failed")]
         LanguageResourceFailed(Vec<fluent_syntax::parser::ParserError>),
 
-        #[error("error-i18n-3 Bundle load failed")]
+        #[error("error-i18n-bundle-load Bundle load failed")]
         BundleLoadFailed(Vec<fluent::FluentError>),
     }
 }

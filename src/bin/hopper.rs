@@ -1,6 +1,6 @@
 use anyhow::Result;
 use hopper::{
-    cache::{new_resolve_aturi_cache, new_resolve_webfinger_cache, ResolveWebfingerResult},
+    cache::{new_resolve_aturi_cache, new_resolve_webhostmeta_cache, ResolveWebHostMetaResult},
     http::{
         context::{AppEngine, I18nContext, WebContext},
         server::build_router,
@@ -74,12 +74,12 @@ async fn main() -> Result<()> {
     #[cfg(feature = "reload")]
     let jinja = reload_env::build_env(&config.external_base, &config.version);
 
-    let resolve_webfinger_cache = new_resolve_webfinger_cache();
+    let resolve_webfinger_cache = new_resolve_webhostmeta_cache();
 
     resolve_webfinger_cache
         .insert(
             "bsky.app".to_string(),
-            ResolveWebfingerResult::Found(WebHostMeta::new(vec![
+            ResolveWebHostMetaResult::Found(WebHostMeta::new(vec![
                 hopper::webhostmeta::Link::new("https://bsky.app/profile/{identity}", None),
                 hopper::webhostmeta::Link::new(
                     "https://bsky.app/profile/{identity}/post/{rkey}",
@@ -92,10 +92,12 @@ async fn main() -> Result<()> {
     resolve_webfinger_cache
         .insert(
             "frontpage.fyi".to_string(),
-            ResolveWebfingerResult::Found(WebHostMeta::new(vec![hopper::webhostmeta::Link::new(
-                "https://frontpage.fyi/post/{identity}/{rkey}",
-                Some("fyi.unravel.frontpage.post"),
-            )])),
+            ResolveWebHostMetaResult::Found(WebHostMeta::new(vec![
+                hopper::webhostmeta::Link::new(
+                    "https://frontpage.fyi/post/{identity}/{rkey}",
+                    Some("fyi.unravel.frontpage.post"),
+                ),
+            ])),
         )
         .await;
 

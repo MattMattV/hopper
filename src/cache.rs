@@ -10,21 +10,20 @@ use crate::{
     webhostmeta::{query, WebHostMeta},
 };
 
-struct ResolveWebfingerExpiry;
+struct ResolveWebHostMetaExpiry;
 
 struct ResolveAtUriExpiry;
 
-impl Expiry<String, ResolveWebfingerResult> for ResolveWebfingerExpiry {
+impl Expiry<String, ResolveWebHostMetaResult> for ResolveWebHostMetaExpiry {
     fn expire_after_create(
         &self,
         _key: &String,
-        value: &ResolveWebfingerResult,
+        value: &ResolveWebHostMetaResult,
         _current_time: Instant,
     ) -> Option<Duration> {
         match value {
-            ResolveWebfingerResult::Found(_) => None,
-            // ResolveWebfingerResult::Found(_) => Some(Duration::from_secs(60 * 5)),
-            ResolveWebfingerResult::NotFound(_) => Some(Duration::from_secs(60 * 10)),
+            ResolveWebHostMetaResult::Found(_) => None,
+            ResolveWebHostMetaResult::NotFound(_) => Some(Duration::from_secs(60 * 10)),
         }
     }
 }
@@ -44,7 +43,7 @@ impl Expiry<String, ResolveAtUriResult> for ResolveAtUriExpiry {
 }
 
 #[derive(Clone, PartialEq, Eq)]
-pub enum ResolveWebfingerResult {
+pub enum ResolveWebHostMetaResult {
     Found(WebHostMeta),
     NotFound(String),
 }
@@ -55,8 +54,8 @@ pub enum ResolveAtUriResult {
     NotFound(String),
 }
 
-pub fn new_resolve_webfinger_cache() -> Cache<String, ResolveWebfingerResult> {
-    let expiry = ResolveWebfingerExpiry;
+pub fn new_resolve_webhostmeta_cache() -> Cache<String, ResolveWebHostMetaResult> {
+    let expiry = ResolveWebHostMetaExpiry;
     Cache::builder()
         .max_capacity(1024 * 20)
         .expire_after(expiry)
@@ -71,22 +70,22 @@ pub fn new_resolve_aturi_cache() -> Cache<String, ResolveAtUriResult> {
         .build()
 }
 
-pub(crate) async fn webfinger_cached(
-    cache: &Cache<String, ResolveWebfingerResult>,
+pub(crate) async fn webhostmeta_cached(
+    cache: &Cache<String, ResolveWebHostMetaResult>,
     http_client: &reqwest::Client,
     hostname: &str,
 ) -> Result<WebHostMeta> {
     if let Some(resolve_handle_result) = cache.get(hostname).await {
         return match resolve_handle_result {
-            ResolveWebfingerResult::Found(webfinger) => Ok(webfinger),
-            ResolveWebfingerResult::NotFound(err) => Err(anyhow!(err)),
+            ResolveWebHostMetaResult::Found(webhostmeta) => Ok(webhostmeta),
+            ResolveWebHostMetaResult::NotFound(err) => Err(anyhow!(err)),
         };
     }
     let webfinger = query(http_client, hostname).await;
 
     let cache_value = match webfinger.as_ref() {
-        Ok(webfinger) => ResolveWebfingerResult::Found(webfinger.clone()),
-        Err(err) => ResolveWebfingerResult::NotFound(err.to_string()),
+        Ok(webfinger) => ResolveWebHostMetaResult::Found(webfinger.clone()),
+        Err(err) => ResolveWebHostMetaResult::NotFound(err.to_string()),
     };
 
     cache.insert(hostname.to_string(), cache_value).await;
@@ -95,7 +94,7 @@ pub(crate) async fn webfinger_cached(
 
 pub(crate) async fn aturi_cached(
     http_client: &reqwest::Client,
-    webfinger_cache: &Cache<String, ResolveWebfingerResult>,
+    webfinger_cache: &Cache<String, ResolveWebHostMetaResult>,
     aturi_cache: &Cache<String, ResolveAtUriResult>,
     servers: &Vec<String>,
     aturi_input: &str,
@@ -116,7 +115,7 @@ pub(crate) async fn aturi_cached(
     }
 
     for server in servers {
-        let webfinger = webfinger_cached(webfinger_cache, http_client, server).await;
+        let webfinger = webhostmeta_cached(webfinger_cache, http_client, server).await;
 
         if let Err(err) = webfinger {
             tracing::debug!(error = ?err, "error encountered");
@@ -139,7 +138,7 @@ pub(crate) async fn aturi_cached(
         return Ok(destination);
     }
 
-    let err = anyhow!("unable to resolve at-uri");
+    let err = anyhow!("error-web-unsupported-aturi Unsupported AT-URI");
     aturi_cache
         .insert(cache_key, ResolveAtUriResult::NotFound(err.to_string()))
         .await;
