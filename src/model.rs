@@ -9,6 +9,12 @@ pub(crate) fn validate_aturi<S: Into<String>>(aturi: S) -> Option<AtUri> {
     let aturi = aturi.into();
     let aturi = aturi.trim();
 
+    let aturi = if let Some(trimmed) = aturi.strip_prefix("web+") {
+        trimmed
+    } else {
+        aturi
+    };
+
     let stripped = aturi.strip_prefix("at://");
     if stripped.is_none() {
         return None;
