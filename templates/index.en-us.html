@@ -10,7 +10,7 @@
 <meta property="og:site_name" content="Hopper" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://hopper.at/logo-256x256.png" />
-<meta property="og:image:url"  content="https://hopper.at/logo-256x256.png" />
+<meta property="og:image:url" content="https://hopper.at/logo-256x256.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="256" />
 <meta property="og:image:height" content="256" />
@@ -42,20 +42,28 @@
         <kbd>aturi</kbd> - The URL encoded AT-URI to jump to.
       </li>
       <li>
-        <kbd>server</kbd> - (Optional) The hostname of an AT-URI provider that serves <code>/.well-known/host-meta.json</code> link templates.
+        <kbd>server</kbd> - (Optional) The hostname of an AT-URI provider that serves
+        <code>/.well-known/host-meta.json</code> link templates.
       </li>
       <li>
         <kbd>lang</kbd> - (Optional) One of "en-us". (Default: "en-us")
       </li>
     </ul>
-    <p>Example:
-      <a target="_blank" href="https://hopper.at/?aturi=at%3A%2F%2Fdid%3Aplc%3Atgudj2fjm77pzkuawquqhsxm%2Fevents.smokesignal.calendar.event%2F3kxbvxj7blk2t">https://hopper.at/?aturi=at%3A%2F%2Fdid%3Aplc%3Atgudj2fjm77pzkuawquqh...vxj7blk2t</a>
-    </p>
+    <p>Examples:</p>
+    <ul>
+      <li><a target="_blank"
+          href="https://hopper.at/?aturi=at%3A%2F%2Fdid%3Aplc%3Atgudj2fjm77pzkuawquqhsxm%2Fevents.smokesignal.calendar.event%2F3kxbvxj7blk2t">https://hopper.at/?aturi=at%3A%2F%2Fdid%3Aplc%3Atgudj2fjm77pzkuawquqh...vxj7blk2t</a>
+      </li>
+      <li><a target="_blank"
+          href="web+at://did:plc:tgudj2fjm77pzkuawquqhsxm/events.smokesignal.calendar.event/3kxbvxj7blk2t">web+at://did:plc:tgudj2fjm77pzkuawquqhsxm/events.smokesignal.calendar.event/3kxbvxj7blk2t</a>
+      </li>
+    </ul>
 
     <h3>Spec</h3>
     <p>More information and examples can be found at <a href="https://{{ base }}/spec">https://{{ base }}/spec</a></p>
 
-    <p>Why Hopper? See <a href="https://en.wikipedia.org/wiki/Hopper_balloon">https://en.wikipedia.org/wiki/Hopper_balloon</a></p>
+    <p>Why Hopper? See <a
+        href="https://en.wikipedia.org/wiki/Hopper_balloon">https://en.wikipedia.org/wiki/Hopper_balloon</a></p>
   </section>
 </main>
 {% endblock %}
