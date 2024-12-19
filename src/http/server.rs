@@ -20,7 +20,10 @@ use tower_http::trace::TraceLayer;
 #[cfg(feature = "reload")]
 use tower_http::services::ServeDir;
 
-use crate::http::{context::WebContext, handle_index::handle_index, handle_spec::handle_spec};
+use crate::http::{
+    context::WebContext, handle_index::handle_index, handle_policy::handle_policy,
+    handle_spec::handle_spec,
+};
 
 pub fn build_router(web_context: WebContext) -> Router {
     #[cfg(feature = "reload")]
@@ -34,6 +37,7 @@ pub fn build_router(web_context: WebContext) -> Router {
     Router::new()
         .route("/", get(handle_index))
         .route("/spec", get(handle_spec))
+        .route("/policy", get(handle_policy))
         .nest_service("/static", serve_dir.clone())
         .fallback_service(serve_dir)
         .layer((
