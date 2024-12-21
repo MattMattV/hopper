@@ -130,6 +130,7 @@ fn parse_servers(value: &str) -> Vec<String> {
     values.extend(vec![
         "smokesignal.events".into(),
         "frontpage.fyi".into(),
+        "whtwnd.com".into(),
         "bsky.app".into(),
     ]);
 

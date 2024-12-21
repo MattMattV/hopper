@@ -101,6 +101,18 @@ async fn main() -> Result<()> {
         )
         .await;
 
+        resolve_webfinger_cache
+        .insert(
+            "whtwnd.com".to_string(),
+            ResolveWebHostMetaResult::Found(WebHostMeta::new(vec![
+                hopper::webhostmeta::Link::new(
+                    "https://whtwnd.com/{identity}/{rkey}",
+                    Some("com.whtwnd.blog.entry"),
+                ),
+            ])),
+        )
+        .await;
+
     let resolve_aturi_cache = new_resolve_aturi_cache();
 
     let web_context = WebContext::new(
